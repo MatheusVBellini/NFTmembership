@@ -36,6 +36,13 @@ contract MemberNFT is ERC721, Ownable {
     }
 
     /**
+    * Used to check whether address is a member
+    */
+    function isMember(address sender) external view returns (bool){
+        return members[sender];
+    }
+
+    /**
     *  Function for acquiring a NFT membership for the DAO.
     */
     function mint(address buyer, uint256 value, uint256 definedPrice) external payable onlyOwner {

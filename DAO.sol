@@ -11,7 +11,7 @@
 
 pragma solidity ^0.8.4;
 
-import 'MemberNFT.sol';
+import './MemberNFT.sol';
 
 contract DAO {
 	uint256 public membershipPrice = 1 ether;
@@ -33,7 +33,7 @@ contract DAO {
 	*  Used to make functions accessible only for members
 	*/
 	modifier memberOnly() {
-		require(NFTminter.members[msg.sender], 'This action is reserved for certified members only');
+		require(NFTminter.isMember(msg.sender), 'This action is reserved for certified members only');
 		_;
 	}
 
@@ -53,14 +53,14 @@ contract DAO {
 	/**
 	*  Only demonstrative code for showing member-only actions
 	*/
-	function viewDAOfunds() public memberOnly {
+	function viewDAOfunds() public view memberOnly returns (uint256) {
 		return DAOfunds;
 	}
 
 	/**
 	* DAO NFT-minter independet function, but with consensus required
 	*/
-	function changeMembershipPrice(uint258 _membershipPrice) public withConsensus {
+	function changeMembershipPrice(uint256 _membershipPrice) public withConsensus {
 		membershipPrice = _membershipPrice;
 	}
 
@@ -78,7 +78,7 @@ contract DAO {
 	/**
 	*  Activates the membership minting process
 	*/
-	function acquireMembership() public {
+	function acquireMembership() public payable {
 		NFTminter.mint(msg.sender, msg.value, membershipPrice);
 	}
 }
